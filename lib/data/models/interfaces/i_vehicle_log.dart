@@ -1,8 +1,8 @@
 abstract class IVehicleLog {
-  final String licensePlate;
-  final int entranceTime;
-  final String occupiedSpot;
+  String get licensePlate;
+  int get entranceTime;
+  String get occupiedSpot;
   int? exitTime;
 
-  IVehicleLog(this.entranceTime, this.licensePlate, this.occupiedSpot);
+  Map<String, dynamic> toJson();
 }

@@ -21,10 +21,11 @@ class MyApp extends StatelessWidget {
         primarySwatch: parkingBlue,
       ),
       routes: <String, Widget Function(BuildContext)>{
-        'splash': (_) => makeSplashPage(),
-        'home': (_) => makeHomePage(),
-        'history': (_) => makeHistoryPage(),
+        '/splash': (_) => makeSplashPage(),
+        '/home': (_) => makeHomePage(),
+        '/history': (_) => makeHistoryPage(),
       },
+      initialRoute: '/splash',
     );
   }
 }

@@ -5,6 +5,14 @@ import 'package:parking_lot_app/ui/pages/home/home_presenter.dart';
 
 class GetxHomePresenter extends GetxController implements HomePresenter {
   @override
+  // TODO: implement errorStream
+  Stream<UiError> get errorStream => throw UnimplementedError();
+
+  @override
+  // TODO: implement isLoadingStream
+  Stream<bool> get isLoadingStream => throw UnimplementedError();
+
+  @override
   Future<void> createEntrance({required String license, required String spot}) {
     // TODO: implement createEntrance
     throw UnimplementedError();
@@ -17,16 +25,8 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
   }
 
   @override
-  // TODO: implement errorStream
-  Stream<UiError> get errorStream => throw UnimplementedError();
-
-  @override
   Future<IParkingDailyLog> fetchDailyParkingLot() {
     // TODO: implement fetchDailyParkingLot
     throw UnimplementedError();
   }
-
-  @override
-  // TODO: implement isLoadingStream
-  Stream<bool> get isLoadingStream => throw UnimplementedError();
 }
