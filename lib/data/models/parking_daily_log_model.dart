@@ -1,8 +1,10 @@
 import 'package:intl/intl.dart';
 import 'package:parking_lot_app/data/models/interfaces/i_parking_daily_log.dart';
 import 'package:parking_lot_app/data/models/interfaces/i_vehicle_log.dart';
+import 'package:equatable/equatable.dart';
+import 'package:parking_lot_app/data/models/vehicle_log_model.dart';
 
-class ParkingDailyLogModel implements IParkingDailyLog {
+class ParkingDailyLogModel with EquatableMixin implements IParkingDailyLog {
   ParkingDailyLogModel({required this.totalSpots, required this.availableSpots})
       : date = DateFormat('dd/MM/yyyy').format(DateTime.now());
 
@@ -40,8 +42,16 @@ class ParkingDailyLogModel implements IParkingDailyLog {
       : totalSpots = json['total_spots'],
         availableSpots = json['available_spots'],
         date = json['date'],
-        dailyHistory = json['daily_history'],
-        occupiedSpots = json['occupied_spots'];
+        dailyHistory = json['daily_history'] == null
+            ? null
+            : List<Map<String, dynamic>>.from(json['daily_history'])
+                .map((json) => VehicleLogModel.fromJson(json))
+                .toList(),
+        occupiedSpots = json['occupied_spots'] == null
+            ? null
+            : List<Map<String, dynamic>>.from(json['occupied_spots'])
+                .map((json) => VehicleLogModel.fromJson(json))
+                .toList();
 
   @override
   Map<String, dynamic> toJson() {
@@ -49,8 +59,12 @@ class ParkingDailyLogModel implements IParkingDailyLog {
     data['total_spots'] = totalSpots;
     data['available_spots'] = availableSpots;
     data['date'] = date;
-    data['daily_history'] = dailyHistory;
-    data['occupied_spots'] = occupiedSpots;
+    data['daily_history'] = dailyHistory?.map((obj) => obj.toJson()).toList();
+    data['occupied_spots'] = occupiedSpots?.map((obj) => obj.toJson()).toList();
     return data;
   }
+
+  @override
+  List<Object?> get props =>
+      [totalSpots, availableSpots, date, dailyHistory, occupiedSpots];
 }

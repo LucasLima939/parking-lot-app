@@ -1,6 +1,7 @@
 import 'package:parking_lot_app/data/models/interfaces/i_vehicle_log.dart';
+import 'package:equatable/equatable.dart';
 
-class VehicleLogModel implements IVehicleLog {
+class VehicleLogModel with EquatableMixin implements IVehicleLog {
   VehicleLogModel(this.entranceTime, this.licensePlate, this.occupiedSpot);
 
   @override
@@ -31,4 +32,8 @@ class VehicleLogModel implements IVehicleLog {
     data['occupied_spot'] = occupiedSpot;
     return data;
   }
+
+  @override
+  List<Object?> get props =>
+      [exitTime, entranceTime, licensePlate, occupiedSpot];
 }

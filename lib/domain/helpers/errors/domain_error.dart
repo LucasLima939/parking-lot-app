@@ -1,1 +1,1 @@
-enum DomainError { unexpected, conversionError }
+enum DomainError { unexpected, conversionError, noRegister }
