@@ -9,11 +9,10 @@ class LocalFetchDailyLog implements FetchDailyLog {
   LocalFetchDailyLog({required this.client});
 
   @override
-  Future<IParkingDailyLog> fetch({required String formattedDate}) async {
+  Future<IParkingDailyLog?> fetch({required String formattedDate}) async {
     try {
       final response = await client.get(key: formattedDate);
-      if (response == null) throw DomainError.noRegister;
-      return ParkingDailyLogModel.fromJson(response);
+      return response == null ? null : ParkingDailyLogModel.fromJson(response);
     } on DomainError {
       rethrow;
     } catch (e) {

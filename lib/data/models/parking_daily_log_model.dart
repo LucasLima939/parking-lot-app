@@ -30,10 +30,10 @@ class ParkingDailyLogModel with EquatableMixin implements IParkingDailyLog {
   }
 
   @override
-  void exit(IVehicleLog vehicle) {
+  void exit(IVehicleLog vehicle, int exitTimestamp) {
     final _isRemoved = occupiedSpots?.remove(vehicle) ?? false;
     if (_isRemoved) {
-      vehicle.exitTime = DateTime.now().millisecondsSinceEpoch;
+      vehicle.exitTime = exitTimestamp;
       dailyHistory?.add(vehicle);
     }
   }

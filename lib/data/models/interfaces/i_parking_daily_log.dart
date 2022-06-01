@@ -8,6 +8,6 @@ abstract class IParkingDailyLog {
   List<IVehicleLog>? dailyHistory;
 
   void entrance(IVehicleLog vehicle);
-  void exit(IVehicleLog vehicle);
+  void exit(IVehicleLog vehicle, int exitTimestamp);
   Map<String, dynamic> toJson();
 }
