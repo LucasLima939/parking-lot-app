@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:parking_lot_app/ui/components/custom_text_form_field.dart';
+import 'package:parking_lot_app/ui/pages/home/components/custom_text_form_field.dart';
 import 'package:parking_lot_app/ui/pages/home/components/confirm_button.dart';
 import 'package:parking_lot_app/ui/pages/home/components/spot_dropdown_button.dart';
 import 'package:parking_lot_app/ui/pages/home/home_presenter.dart';
@@ -8,10 +8,12 @@ class CreateEntranceModal extends StatefulWidget {
   final HomePresenter presenter;
   final String? selectedSpot;
   final List<String> availableSpots;
+  final VoidCallback onSuccess;
   const CreateEntranceModal(
       {this.selectedSpot,
       required this.presenter,
       required this.availableSpots,
+      required this.onSuccess,
       Key? key})
       : super(key: key);
 
@@ -84,7 +86,8 @@ class _CreateEntranceModalState extends State<CreateEntranceModal> {
                 spot: _selectedSpot!,
                 entranceTimestamp: DateTime.now().millisecondsSinceEpoch,
                 onSuccess: () {
-                  Navigator.pop(context, true);
+                  Navigator.pop(context);
+                  widget.onSuccess();
                 })),
         Expanded(child: Container()),
       ]),

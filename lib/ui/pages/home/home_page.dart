@@ -18,7 +18,7 @@ class _HomePageState extends State<HomePage> with LoadingManager {
   @override
   void initState() {
     super.initState();
-    handleLoading(context, widget.presenter.isLoadingStream);
+    //handleLoading(context, widget.presenter.isLoadingStream);
   }
 
   @override
@@ -76,6 +76,36 @@ class _HomePageState extends State<HomePage> with LoadingManager {
                             ],
                           ),
                         ),
+                        SizedBox(height: 30),
+                        Align(
+                          alignment: Alignment.center,
+                          child: GridView(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisSpacing: 10,
+                                    mainAxisSpacing: 10,
+                                    crossAxisCount: 4),
+                            children: totalParkingSpots.map((spot) {
+                              final _isOccupied = _occupiedSpots.contains(spot);
+                              return _spotChip(
+                                  onTap: () async {
+                                    if (_isOccupied) {
+                                      await _showCreateExitModal(
+                                          occupiedSpots: _occupiedSpots,
+                                          spot: spot);
+                                    } else {
+                                      await _showCreateEntranceModal(
+                                          availableSpots: _availableSpots,
+                                          spot: spot);
+                                    }
+                                  },
+                                  label: spot,
+                                  isOccupied: _isOccupied);
+                            }).toList(),
+                          ),
+                        )
                       ],
                     ),
                   ),
@@ -91,15 +121,16 @@ class _HomePageState extends State<HomePage> with LoadingManager {
                             _bottomNavBarButton(
                                 color: Colors.white,
                                 title: 'Saída',
-                                onTap: _showCreateExitModal),
+                                onTap: () async {
+                                  await _showCreateExitModal(
+                                      occupiedSpots: _occupiedSpots);
+                                }),
                             _bottomNavBarButton(
                                 color: Theme.of(context).primaryColor,
                                 title: 'Entrada',
                                 onTap: () async {
-                                  final _success =
-                                      await _showCreateEntranceModal(
-                                          spots: _availableSpots);
-                                  if (_success) setState(() {});
+                                  await _showCreateEntranceModal(
+                                      availableSpots: _availableSpots);
                                 })
                           ],
                         ),
@@ -113,14 +144,26 @@ class _HomePageState extends State<HomePage> with LoadingManager {
     );
   }
 
-  _showCreateExitModal({String? spot}) async =>
-      await _showModalBottomSheet(CreateExitModal(selectedSpot: spot));
+  Future _showCreateExitModal(
+          {String? spot, required List<String> occupiedSpots}) async =>
+      await _showModalBottomSheet(CreateExitModal(
+        selectedSpot: spot,
+        presenter: widget.presenter,
+        occupiedSpots: occupiedSpots,
+        onSuccess: () {
+          setState(() {});
+        },
+      ));
 
-  _showCreateEntranceModal({String? spot, required List<String> spots}) async =>
+  Future _showCreateEntranceModal(
+          {String? spot, required List<String> availableSpots}) async =>
       await _showModalBottomSheet(CreateEntranceModal(
         selectedSpot: spot,
-        availableSpots: spots,
+        availableSpots: availableSpots,
         presenter: widget.presenter,
+        onSuccess: () {
+          setState(() {});
+        },
       ));
 
   Future<void> _showModalBottomSheet(Widget modal) async {
@@ -132,6 +175,32 @@ class _HomePageState extends State<HomePage> with LoadingManager {
         backgroundColor: Colors.transparent,
         builder: (_) => modal);
   }
+
+  Widget _spotChip(
+          {required Function() onTap,
+          required String label,
+          required bool isOccupied}) =>
+      Container(
+        height: double.infinity,
+        width: double.infinity,
+        color: Colors.transparent,
+        child: Center(
+          child: GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: onTap,
+            child: Container(
+              height: 40,
+              width: 40,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: isOccupied
+                      ? Theme.of(context).primaryColor
+                      : Colors.white),
+              child: Center(child: Text(label)),
+            ),
+          ),
+        ),
+      );
 
   Widget _chipTitle(String title) => Container(
         color: Theme.of(context).primaryColor,
