@@ -18,12 +18,12 @@ class MockModelCollection {
       }
     ],
   };
-  static final occupiedSpotVehicle = <String, dynamic>{
+  static final occupiedSpotVehicleJson = <String, dynamic>{
     'entrance_time': entranceTimestamp,
     'license_plate': licensePlate,
     'occupied_spot': occupiedSpot,
   };
-  static final historySpotVehicle =
-      Map<String, dynamic>.from(occupiedSpotVehicle)
+  static final historySpotVehicleJson =
+      Map<String, dynamic>.from(occupiedSpotVehicleJson)
         ..addAll(<String, dynamic>{'exit_time': exitTimestamp});
 }

@@ -1,6 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:parking_lot_app/data/models/interfaces/i_parking_daily_log.dart';
+import 'package:parking_lot_app/data/models/interfaces/i_vehicle_log.dart';
 import 'package:parking_lot_app/data/models/parking_daily_log_model.dart';
+import 'package:parking_lot_app/data/models/vehicle_log_model.dart';
 import 'package:parking_lot_app/domain/helpers/errors/domain_error.dart';
 import 'package:parking_lot_app/presentation/presenters/getx_home_presenter.dart';
 import 'package:parking_lot_app/ui/helpers/message/ui_error.dart';
@@ -17,11 +20,15 @@ void main() {
   late int exitTimestamp;
   late String licensePlate;
   late String occupiedSpot;
-  late ParkingDailyLogModel dailyLog;
+  late IParkingDailyLog dailyLog;
+  late IVehicleLog occupiedSpotVehicleLog;
 
   setUp(() {
-    entranceTimestamp = MockModelCollection.entranceTimestamp;
     dailyLog = ParkingDailyLogModel.fromJson(MockModelCollection.dailyLogJson);
+    occupiedSpotVehicleLog =
+        VehicleLogModel.fromJson(MockModelCollection.occupiedSpotVehicleJson);
+
+    entranceTimestamp = MockModelCollection.entranceTimestamp;
     licensePlate = MockModelCollection.licensePlate;
     occupiedSpot = MockModelCollection.occupiedSpot;
     exitTimestamp = MockModelCollection.exitTimestamp;
@@ -39,15 +46,16 @@ void main() {
   setUpAll(() {
     registerFallbackValue(
         ParkingDailyLogModel.fromJson(MockModelCollection.dailyLogJson));
+    registerFallbackValue(
+        VehicleLogModel.fromJson(MockModelCollection.occupiedSpotVehicleJson));
   });
 
   group('Create new entrance', () {
     test('Should call method correctly', () async {
       expect(sut.isLoadingStream, emitsInOrder([true, false]));
 
-      final _dailyLog =
-          Map<String, dynamic>.from(MockModelCollection.dailyLogJson)
-            ..['occupied_spots'].add(MockModelCollection.occupiedSpotVehicle);
+      final _dailyLog = Map<String, dynamic>.from(dailyLog.toJson())
+        ..['occupied_spots'].add(occupiedSpotVehicleLog.toJson());
 
       await sut.createEntrance(
         entranceTimestamp: entranceTimestamp,
@@ -93,7 +101,7 @@ void main() {
       final _dailyLog = Map<String, dynamic>.from(dailyLog.toJson())
         ..addAll({
           'daily_history': [
-            Map<String, dynamic>.from(MockModelCollection.occupiedSpotVehicle)
+            Map<String, dynamic>.from(occupiedSpotVehicleLog.toJson())
               ..addAll(<String, dynamic>{'exit_time': exitTimestamp})
           ]
         })
@@ -149,8 +157,7 @@ void main() {
 
       final response = await sut.fetchDailyParkingLot();
 
-      expect(response,
-          ParkingDailyLogModel.fromJson(MockModelCollection.dailyLogJson));
+      expect(response, ParkingDailyLogModel.fromJson(dailyLog.toJson()));
     });
     test(
         'Should emit UiError.unexpected if method throws DomainError.unexpected',
