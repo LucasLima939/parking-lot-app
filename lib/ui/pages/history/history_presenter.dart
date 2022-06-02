@@ -4,7 +4,7 @@ import 'package:parking_lot_app/ui/helpers/message/ui_error.dart';
 abstract class HistoryPresenter {
   Stream<bool> get isLoadingStream;
   Stream<UiMessage> get messageStream;
-  Stream<IParkingDailyLog> get parkingDailyLogStream;
 
-  Future<void> fetchDailyParkingLot({required String formattedDate});
+  Future<IParkingDailyLog?> fetchDailyParkingLot(
+      {required String formattedDate});
 }

@@ -37,7 +37,6 @@ void main() {
   test('Should emit correct events if method has no errors', () async {
     expect(sut.messageStream, emitsInOrder([UiMessage.none]));
     expect(sut.isLoadingStream, emitsInOrder([true, false]));
-    expect(sut.parkingDailyLogStream, emitsInOrder([parkingDailyLog]));
 
     await sut.fetchDailyParkingLot(
         formattedDate: MockModelCollection.formattedDate);

@@ -11,7 +11,6 @@ class GetxHistoryPresenter extends GetxController implements HistoryPresenter {
 
   final _message = UiMessage.none.obs;
   final _isLoading = false.obs;
-  final _parkingDailyLog = Rx<IParkingDailyLog?>(null);
 
   @override
   Stream<UiMessage> get messageStream => _message.stream;
@@ -20,21 +19,17 @@ class GetxHistoryPresenter extends GetxController implements HistoryPresenter {
   Stream<bool> get isLoadingStream => _isLoading.stream;
 
   @override
-  Stream<IParkingDailyLog> get parkingDailyLogStream =>
-      _parkingDailyLog.stream.map<IParkingDailyLog>((event) => event!);
-
-  @override
-  Future<void> fetchDailyParkingLot({required String formattedDate}) async {
+  Future<IParkingDailyLog?> fetchDailyParkingLot(
+      {required String formattedDate}) async {
     _isLoading.value = true;
     _message.value = UiMessage.none;
+
+    IParkingDailyLog? response;
+
     try {
-      final response = await fetchDailyLog.fetch(formattedDate: formattedDate);
+      response = await fetchDailyLog.fetch(formattedDate: formattedDate);
 
       if (response == null) throw DomainError.noRegister;
-
-      _parkingDailyLog.value = response;
-
-      _message.value = UiMessage.none;
     } catch (e) {
       switch (e) {
         case DomainError.noRegister:
@@ -46,6 +41,7 @@ class GetxHistoryPresenter extends GetxController implements HistoryPresenter {
       }
     } finally {
       _isLoading.value = false;
+      return response;
     }
   }
 }

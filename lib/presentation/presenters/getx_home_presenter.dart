@@ -103,9 +103,9 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
     try {
       _response = await fetchDailyLog.fetch(formattedDate: formattedDate);
       if (_response == null) {
-        final _newDailyLog = ParkingDailyLogModel(
+        _response = ParkingDailyLogModel(
             totalSpots: _totalSpots, availableSpots: _totalSpots);
-        await updateDailyLog.update(dailyLog: _newDailyLog);
+        await updateDailyLog.update(dailyLog: _response);
       }
     } catch (e) {
       _message.value = UiMessage.unexpected;

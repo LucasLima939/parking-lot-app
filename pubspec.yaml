@@ -33,6 +33,7 @@ dependencies:
   hive: ^2.2.1
   get: ^4.6.5
   intl: ^0.17.0
+  flutter_multi_formatter: ^2.5.7
 
 
   # The following adds the Cupertino Icons font to your application.

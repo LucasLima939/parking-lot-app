@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 
 class CustomTextFormField extends StatelessWidget {
-  final void Function(String)? onChanged;
+  final void Function(String) onChanged;
   final String title;
-  const CustomTextFormField({
+  final TextEditingController controller = TextEditingController();
+  CustomTextFormField({
     Key? key,
     required this.onChanged,
     required this.title,
@@ -14,7 +16,10 @@ class CustomTextFormField extends StatelessWidget {
     return SizedBox(
       height: 40,
       child: TextFormField(
+          textCapitalization: TextCapitalization.characters,
           onChanged: onChanged,
+          autocorrect: false,
+          inputFormatters: [MaskedInputFormatter('####-####')],
           decoration: InputDecoration(
             labelText: title,
             border: OutlineInputBorder(
