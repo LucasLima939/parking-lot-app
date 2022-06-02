@@ -3,7 +3,7 @@
 ## PT
 Esse é um app de exemplo para o gerenciamento de um estacionamento onde você pode registrar as entradas e saídas, anotar as placas e recuperar o seu histórico diário. Todos os dados são salvos no armazenamento interno do celular.
 
-Esse projeto é baseado na estrutura de Clean Architecture e princípios de SOLD, DRY e Clean Code.
+Esse projeto é baseado na estrutura de Clean Architecture e princípios de SOLID, DRY e Clean Code.
 Foi desenhado com o padrão MVP e usando o pacote Get como gerenciador de estados, esse projeto é focado em ser um sistema leve e escalável.
 **Padrões de Projeto usados:**
 - [x] Factory
@@ -23,9 +23,3 @@ Designs with the MVP architectural pattern and using Get package as state manage
 
 ### Classes Diagram
 ![Diagrama de Relacionamento entre classes](./assets/parking-diagram.png)
-
-### Figma Prototypes
-![Home](./assets/figma-prototype/01-Home-Page.png)
-![Entrance](./assets/figma-prototype/02-Entrance-Modal.png)
-![Exit](./assets/figma-prototype/03-Exit-Modal.png)
-![History](./assets/figma-prototype/04-History-Page.png)
