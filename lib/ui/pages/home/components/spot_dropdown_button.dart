@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:parking_lot_app/ui/utils/constants/total_parking_spots.dart';
 
 class SpotDropdownButton extends StatelessWidget {
   final void Function(String?) onChanged;
@@ -42,15 +41,21 @@ class SpotDropdownButton extends StatelessWidget {
             style: TextStyle(color: Theme.of(context).primaryColor),
             hint: Text('Vaga'),
             onChanged: (value) => onChanged(value),
-            items: spots.map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
+            menuMaxHeight: 300,
+            items: _spotsList(spots),
           ),
         ),
       ]),
     );
+  }
+
+  List<DropdownMenuItem<String>> _spotsList(spots) {
+    final _sortedSpots = List<String>.from(spots)..sort();
+    return _sortedSpots.map<DropdownMenuItem<String>>((String value) {
+      return DropdownMenuItem<String>(
+        value: value,
+        child: Text(value),
+      );
+    }).toList();
   }
 }
