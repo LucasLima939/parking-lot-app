@@ -6,6 +6,7 @@ import 'factories/cache/local_storage_configure.dart';
 import 'factories/pages/history_page_factory.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await makeLocalStorageConfigure().configure();
   runApp(const MyApp());
 }

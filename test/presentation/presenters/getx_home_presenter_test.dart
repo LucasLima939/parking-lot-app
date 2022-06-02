@@ -34,6 +34,13 @@ void main() {
     'total_spots': totalSpots,
     'available_spots': availableSpots,
     'date': formattedDate,
+    'occupied_spots': [
+      <String, dynamic>{
+        'entrance_time': DateTime.now().millisecondsSinceEpoch,
+        'license_plate': licensePlate,
+        'occupied_spot': occupiedSpot,
+      }
+    ],
   };
   final dailyLog = ParkingDailyLogModel.fromJson(dailyLogJson);
 
@@ -58,15 +65,13 @@ void main() {
       expect(sut.isLoadingStream, emitsInOrder([true, false]));
 
       final _dailyLog = Map<String, dynamic>.from(dailyLogJson)
-        ..addAll({
-          'occupied_spots': [occupiedSpotVehicle]
-        });
+        ..['occupied_spots'].add(occupiedSpotVehicle);
 
       await sut.createEntrance(
-          entranceTimestamp: entranceTimestamp,
-          license: licensePlate,
-          spot: occupiedSpot,
-          onSuccess: () {});
+        entranceTimestamp: entranceTimestamp,
+        license: licensePlate,
+        spot: occupiedSpot,
+      );
 
       verify(() => updateDailyLog.update(
           dailyLog: ParkingDailyLogModel.fromJson(_dailyLog))).called(1);
@@ -78,10 +83,10 @@ void main() {
           sut.messageStream, emitsInOrder([UiMessage.none, UiMessage.created]));
 
       await sut.createEntrance(
-          entranceTimestamp: entranceTimestamp,
-          license: licensePlate,
-          spot: occupiedSpot,
-          onSuccess: () {});
+        entranceTimestamp: entranceTimestamp,
+        license: licensePlate,
+        spot: occupiedSpot,
+      );
     });
 
     test(
@@ -94,10 +99,10 @@ void main() {
           emitsInOrder([UiMessage.none, UiMessage.unexpected]));
 
       await sut.createEntrance(
-          entranceTimestamp: entranceTimestamp,
-          license: licensePlate,
-          spot: occupiedSpot,
-          onSuccess: () {});
+        entranceTimestamp: entranceTimestamp,
+        license: licensePlate,
+        spot: occupiedSpot,
+      );
     });
   });
   group('Create new exit', () {
@@ -107,27 +112,21 @@ void main() {
       final _dailyLog = Map<String, dynamic>.from(dailyLogJson)
         ..addAll({
           'daily_history': [historySpotVehicle]
-        });
+        })
+        ..['occupied_spots'] = [];
 
-      await sut.createExit(
-          spot: occupiedSpot, exitTimestamp: exitTimestamp, onSuccess: () {});
+      await sut.createExit(spot: occupiedSpot, exitTimestamp: exitTimestamp);
 
       verify(() => updateDailyLog.update(
           dailyLog: ParkingDailyLogModel.fromJson(_dailyLog))).called(1);
     });
-    test('Should call onSuccess CallBack if method has no error', () async {
+    test('Should emit UiMessage.created if method passes with no error',
+        () async {
       expect(sut.isLoadingStream, emitsInOrder([true, false]));
       expect(
           sut.messageStream, emitsInOrder([UiMessage.none, UiMessage.created]));
 
-      final onSuccessCallback = () {};
-
-      await sut.createExit(
-          spot: occupiedSpot,
-          exitTimestamp: exitTimestamp,
-          onSuccess: onSuccessCallback);
-
-      verify(() => onSuccessCallback).called(1);
+      await sut.createExit(spot: occupiedSpot, exitTimestamp: exitTimestamp);
     });
     test(
         'Should emit UiError.unexpected if method throws DomainError.unexpected',
@@ -138,8 +137,7 @@ void main() {
       expect(sut.messageStream,
           emitsInOrder([UiMessage.none, UiMessage.unexpected]));
 
-      await sut.createExit(
-          spot: occupiedSpot, exitTimestamp: exitTimestamp, onSuccess: () {});
+      await sut.createExit(spot: occupiedSpot, exitTimestamp: exitTimestamp);
     });
   });
   group('Fetch daily parking lot', () {

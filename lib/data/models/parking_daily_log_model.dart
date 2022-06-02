@@ -34,6 +34,7 @@ class ParkingDailyLogModel with EquatableMixin implements IParkingDailyLog {
     final _isRemoved = occupiedSpots?.remove(vehicle) ?? false;
     if (_isRemoved) {
       vehicle.exitTime = exitTimestamp;
+      dailyHistory ??= <IVehicleLog>[];
       dailyHistory?.add(vehicle);
     }
   }
@@ -44,13 +45,15 @@ class ParkingDailyLogModel with EquatableMixin implements IParkingDailyLog {
         date = json['date'],
         dailyHistory = json['daily_history'] == null
             ? null
-            : List<Map<String, dynamic>>.from(json['daily_history'])
-                .map((json) => VehicleLogModel.fromJson(json))
+            : List.from(json['daily_history'])
+                .map((data) =>
+                    VehicleLogModel.fromJson(Map<String, dynamic>.from(data)))
                 .toList(),
         occupiedSpots = json['occupied_spots'] == null
             ? null
-            : List<Map<String, dynamic>>.from(json['occupied_spots'])
-                .map((json) => VehicleLogModel.fromJson(json))
+            : List.from(json['occupied_spots'])
+                .map((data) =>
+                    VehicleLogModel.fromJson(Map<String, dynamic>.from(data)))
                 .toList();
 
   @override

@@ -35,7 +35,7 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
       {required String license,
       required String spot,
       required int entranceTimestamp,
-      required VoidCallback onSuccess}) async {
+      VoidCallback? onSuccess}) async {
     _message.value = UiMessage.none;
     _isLoading.value = true;
     try {
@@ -45,7 +45,7 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
 
       await updateDailyLog.update(dailyLog: _dailyLog!);
 
-      onSuccess();
+      if (onSuccess != null) onSuccess();
 
       _message.value = UiMessage.created;
     } catch (e) {
@@ -59,14 +59,16 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
   Future<void> createExit(
       {required String spot,
       required int exitTimestamp,
-      required VoidCallback onSuccess}) async {
+      VoidCallback? onSuccess}) async {
     _message.value = UiMessage.none;
     _isLoading.value = true;
     try {
       _dailyLog ??= await fetchDailyParkingLot();
 
-      final _vehicle = _dailyLog!.occupiedSpots
-          ?.firstWhere((element) => element.occupiedSpot == spot);
+      final _vehicle = _dailyLog!.occupiedSpots?.firstWhere(
+        (element) => element.occupiedSpot == spot,
+        orElse: () => throw DomainError.noRegister,
+      );
 
       if (_vehicle == null) throw DomainError.noRegister;
 
@@ -74,7 +76,7 @@ class GetxHomePresenter extends GetxController implements HomePresenter {
 
       await updateDailyLog.update(dailyLog: _dailyLog!);
 
-      onSuccess();
+      if (onSuccess != null) onSuccess();
 
       _message.value = UiMessage.created;
     } on DomainError catch (error) {

@@ -11,9 +11,9 @@ abstract class HomePresenter {
       {required String license,
       required String spot,
       required int entranceTimestamp,
-      required VoidCallback onSuccess});
+      VoidCallback? onSuccess});
   Future<void> createExit(
       {required String spot,
       required int exitTimestamp,
-      required VoidCallback onSuccess});
+      VoidCallback? onSuccess});
 }
