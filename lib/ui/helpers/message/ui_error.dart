@@ -1,28 +1,25 @@
-enum UiMessage {
+enum UiError {
   none,
   requiredField,
   invalidField,
   unexpected,
   invalidCredentials,
   notConnected,
-  created,
   noRegister,
 }
 
-extension UiMessageDescription on UiMessage {
+extension UiErrorDescription on UiError {
   String description() {
     switch (this) {
-      case UiMessage.requiredField:
+      case UiError.requiredField:
         return 'Campo obrigatório';
-      case UiMessage.invalidField:
+      case UiError.invalidField:
         return 'Campo inválido';
-      case UiMessage.invalidCredentials:
+      case UiError.invalidCredentials:
         return 'Credentiais inválidas';
-      case UiMessage.notConnected:
+      case UiError.notConnected:
         return 'Sem conexão, tente novamente';
-      case UiMessage.created:
-        return 'Criado com sucesso!';
-      case UiMessage.noRegister:
+      case UiError.noRegister:
         return 'Registro não localizado, tente novamente!';
       default:
         return 'Erro inesperado, tente novamente';

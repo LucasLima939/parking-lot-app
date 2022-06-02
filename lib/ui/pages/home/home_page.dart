@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:parking_lot_app/data/models/interfaces/i_parking_daily_log.dart';
 import 'package:parking_lot_app/ui/mixins/loading_manager.dart';
+import 'package:parking_lot_app/ui/mixins/ui_error_mixin.dart';
 import 'package:parking_lot_app/ui/pages/home/home_presenter.dart';
 import 'package:parking_lot_app/ui/pages/home/modals/create_entrance_modal.dart';
 import 'package:parking_lot_app/ui/pages/home/modals/create_exit_modal.dart';
@@ -14,11 +15,11 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> with LoadingManager {
+class _HomePageState extends State<HomePage> with LoadingManager, UiErrorMixin {
   @override
   void initState() {
+    handleError(context, widget.presenter.messageStream);
     super.initState();
-    //handleLoading(context, widget.presenter.isLoadingStream);
   }
 
   @override
@@ -47,7 +48,9 @@ class _HomePageState extends State<HomePage> with LoadingManager {
               return Container();
             } else if (_dailyParkingLog == null) {
               //TO-DO error message
-              return Container();
+              return Center(
+                child: Text('Sem dados disponíveis, tente novamente.'),
+              );
             } else {
               final _occupiedSpots = _dailyParkingLog.occupiedSpots
                       ?.map((spot) => spot.occupiedSpot)
@@ -61,54 +64,58 @@ class _HomePageState extends State<HomePage> with LoadingManager {
                 height: MediaQuery.of(context).size.height,
                 child: Stack(children: [
                   Padding(
-                    padding: const EdgeInsets.all(15),
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              _chipTitle(
-                                  'Total: ${_dailyParkingLog.totalSpots}'),
-                              _chipTitle(
-                                  'Ocupadas: ${_dailyParkingLog.occupiedSpots?.length ?? 0}'),
-                            ],
-                          ),
+                      padding: const EdgeInsets.all(15),
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  _chipTitle(
+                                      'Total: ${_dailyParkingLog.totalSpots}'),
+                                  _chipTitle(
+                                      'Ocupadas: ${_dailyParkingLog.occupiedSpots?.length ?? 0}'),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: 30),
+                            Align(
+                              alignment: Alignment.center,
+                              child: GridView(
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                gridDelegate:
+                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisSpacing: 10,
+                                        mainAxisSpacing: 10,
+                                        crossAxisCount: 4),
+                                children: totalParkingSpots.map((spot) {
+                                  final _isOccupied =
+                                      _occupiedSpots.contains(spot);
+                                  return _spotChip(
+                                      onTap: () async {
+                                        if (_isOccupied) {
+                                          await _showCreateExitModal(
+                                              occupiedSpots: _occupiedSpots,
+                                              spot: spot);
+                                        } else {
+                                          await _showCreateEntranceModal(
+                                              availableSpots: _availableSpots,
+                                              spot: spot);
+                                        }
+                                      },
+                                      label: spot,
+                                      isOccupied: _isOccupied);
+                                }).toList(),
+                              ),
+                            )
+                          ],
                         ),
-                        SizedBox(height: 30),
-                        Align(
-                          alignment: Alignment.center,
-                          child: GridView(
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisSpacing: 10,
-                                    mainAxisSpacing: 10,
-                                    crossAxisCount: 4),
-                            children: totalParkingSpots.map((spot) {
-                              final _isOccupied = _occupiedSpots.contains(spot);
-                              return _spotChip(
-                                  onTap: () async {
-                                    if (_isOccupied) {
-                                      await _showCreateExitModal(
-                                          occupiedSpots: _occupiedSpots,
-                                          spot: spot);
-                                    } else {
-                                      await _showCreateEntranceModal(
-                                          availableSpots: _availableSpots,
-                                          spot: spot);
-                                    }
-                                  },
-                                  label: spot,
-                                  isOccupied: _isOccupied);
-                            }).toList(),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
+                      )),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
@@ -151,6 +158,7 @@ class _HomePageState extends State<HomePage> with LoadingManager {
         presenter: widget.presenter,
         occupiedSpots: occupiedSpots,
         onSuccess: () {
+          Navigator.pop(context);
           setState(() {});
         },
       ));
@@ -162,6 +170,7 @@ class _HomePageState extends State<HomePage> with LoadingManager {
         availableSpots: availableSpots,
         presenter: widget.presenter,
         onSuccess: () {
+          Navigator.pop(context);
           setState(() {});
         },
       ));

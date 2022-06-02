@@ -35,7 +35,7 @@ void main() {
         formattedDate: MockModelCollection.formattedDate)).called(1);
   });
   test('Should emit correct events if method has no errors', () async {
-    expect(sut.messageStream, emitsInOrder([UiMessage.none]));
+    expect(sut.messageStream, emitsInOrder([UiError.none]));
     expect(sut.isLoadingStream, emitsInOrder([true, false]));
 
     await sut.fetchDailyParkingLot(
@@ -44,8 +44,7 @@ void main() {
   test('Should emit error if method throws DomainError.exception', () async {
     fetchDailyLog.mockError(DomainError.unexpected);
 
-    expect(sut.messageStream,
-        emitsInOrder([UiMessage.none, UiMessage.unexpected]));
+    expect(sut.messageStream, emitsInOrder([UiError.none, UiError.unexpected]));
     expect(sut.isLoadingStream, emitsInOrder([true, false]));
 
     await sut.fetchDailyParkingLot(

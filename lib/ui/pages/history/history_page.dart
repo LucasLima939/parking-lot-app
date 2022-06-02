@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:parking_lot_app/data/models/interfaces/i_parking_daily_log.dart';
 import 'package:parking_lot_app/data/models/interfaces/i_vehicle_log.dart';
 import 'package:parking_lot_app/ui/mixins/loading_manager.dart';
+import 'package:parking_lot_app/ui/mixins/ui_error_mixin.dart';
 import 'package:parking_lot_app/ui/pages/history/history_presenter.dart';
 
 class HistoryPage extends StatefulWidget {
@@ -13,12 +14,15 @@ class HistoryPage extends StatefulWidget {
   State<HistoryPage> createState() => _HistoryPageState();
 }
 
-class _HistoryPageState extends State<HistoryPage> with LoadingManager {
+class _HistoryPageState extends State<HistoryPage>
+    with LoadingManager, UiErrorMixin {
   late String selectedDate;
+
   @override
   void initState() {
     selectedDate = DateFormat('dd/MM/yyyy').format(DateTime.now());
     handleLoading(context, widget.presenter.isLoadingStream);
+    handleError(context, widget.presenter.messageStream);
     super.initState();
   }
 
@@ -82,7 +86,6 @@ class _HistoryPageState extends State<HistoryPage> with LoadingManager {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Container();
                 } else if (parkingDailyLogModel == null) {
-                  // TODO: ERROR MESSAGE
                   return Center(
                     child: Text('Dados não disponíveis'),
                   );
@@ -99,7 +102,6 @@ class _HistoryPageState extends State<HistoryPage> with LoadingManager {
                   }
 
                   if (dailyVehicleRegisterHistory.isEmpty) {
-                    // TODO: NO REGISTER MESSAGE
                     return Center(
                       child: Text('Sem registros na data'),
                     );

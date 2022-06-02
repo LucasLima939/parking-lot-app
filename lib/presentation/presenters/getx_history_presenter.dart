@@ -9,11 +9,11 @@ class GetxHistoryPresenter extends GetxController implements HistoryPresenter {
   final FetchDailyLog fetchDailyLog;
   GetxHistoryPresenter({required this.fetchDailyLog});
 
-  final _message = UiMessage.none.obs;
+  final _message = UiError.none.obs;
   final _isLoading = false.obs;
 
   @override
-  Stream<UiMessage> get messageStream => _message.stream;
+  Stream<UiError> get messageStream => _message.stream;
 
   @override
   Stream<bool> get isLoadingStream => _isLoading.stream;
@@ -22,7 +22,7 @@ class GetxHistoryPresenter extends GetxController implements HistoryPresenter {
   Future<IParkingDailyLog?> fetchDailyParkingLot(
       {required String formattedDate}) async {
     _isLoading.value = true;
-    _message.value = UiMessage.none;
+    _message.value = UiError.none;
 
     IParkingDailyLog? response;
 
@@ -33,10 +33,10 @@ class GetxHistoryPresenter extends GetxController implements HistoryPresenter {
     } catch (e) {
       switch (e) {
         case DomainError.noRegister:
-          _message.value = UiMessage.noRegister;
+          _message.value = UiError.noRegister;
           break;
         default:
-          _message.value = UiMessage.unexpected;
+          _message.value = UiError.unexpected;
           break;
       }
     } finally {

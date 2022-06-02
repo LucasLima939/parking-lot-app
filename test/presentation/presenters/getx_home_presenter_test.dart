@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:parking_lot_app/data/models/parking_daily_log_model.dart';
@@ -61,10 +59,9 @@ void main() {
           dailyLog: ParkingDailyLogModel.fromJson(_dailyLog))).called(1);
     });
 
-    test('Should emit UiMessage.created if success', () async {
+    test('Should emit UiError.created if success', () async {
       expect(sut.isLoadingStream, emitsInOrder([true, false]));
-      expect(
-          sut.messageStream, emitsInOrder([UiMessage.none, UiMessage.created]));
+      expect(sut.messageStream, emitsInOrder([UiError.none]));
 
       await sut.createEntrance(
         entranceTimestamp: entranceTimestamp,
@@ -74,13 +71,13 @@ void main() {
     });
 
     test(
-        'Should emit UiMessage.unexpected if method throws DomainError.unexpected',
+        'Should emit UiError.unexpected if method throws DomainError.unexpected',
         () async {
       updateDailyLog.mockError(DomainError.unexpected);
 
       expect(sut.isLoadingStream, emitsInOrder([true, false]));
-      expect(sut.messageStream,
-          emitsInOrder([UiMessage.none, UiMessage.unexpected]));
+      expect(
+          sut.messageStream, emitsInOrder([UiError.none, UiError.unexpected]));
 
       await sut.createEntrance(
         entranceTimestamp: entranceTimestamp,
@@ -107,11 +104,10 @@ void main() {
       verify(() => updateDailyLog.update(
           dailyLog: ParkingDailyLogModel.fromJson(_dailyLog))).called(1);
     });
-    test('Should emit UiMessage.created if method passes with no error',
+    test('Should emit UiError.created if method passes with no error',
         () async {
       expect(sut.isLoadingStream, emitsInOrder([true, false]));
-      expect(
-          sut.messageStream, emitsInOrder([UiMessage.none, UiMessage.created]));
+      expect(sut.messageStream, emitsInOrder([UiError.none]));
 
       await sut.createExit(spot: occupiedSpot, exitTimestamp: exitTimestamp);
     });
@@ -121,8 +117,8 @@ void main() {
       updateDailyLog.mockError(DomainError.unexpected);
 
       expect(sut.isLoadingStream, emitsInOrder([true, false]));
-      expect(sut.messageStream,
-          emitsInOrder([UiMessage.none, UiMessage.unexpected]));
+      expect(
+          sut.messageStream, emitsInOrder([UiError.none, UiError.unexpected]));
 
       await sut.createExit(spot: occupiedSpot, exitTimestamp: exitTimestamp);
     });
@@ -162,8 +158,8 @@ void main() {
       fetchDailyLog.mockError(DomainError.unexpected);
 
       expect(sut.isLoadingStream, emitsInOrder([true, false]));
-      expect(sut.messageStream,
-          emitsInOrder([UiMessage.none, UiMessage.unexpected]));
+      expect(
+          sut.messageStream, emitsInOrder([UiError.none, UiError.unexpected]));
 
       await sut.fetchDailyParkingLot();
     });
