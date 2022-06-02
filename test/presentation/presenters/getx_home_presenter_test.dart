@@ -8,64 +8,48 @@ import 'package:parking_lot_app/presentation/presenters/getx_home_presenter.dart
 import 'package:parking_lot_app/ui/helpers/message/ui_error.dart';
 
 import '../../mock/fetch_daily_log_spy.dart';
+import '../../mock/mock_model_collection.dart';
 import '../../mock/update_daily_log_spy.dart';
 
 void main() {
   late GetxHomePresenter sut;
   late FetchDailyLogSpy fetchDailyLog;
   late UpdateDailyLogSpy updateDailyLog;
-
-  final totalSpots = 16;
-  final availableSpots = 16;
-  final String formattedDate = '31/06/2022';
-  final licensePlate = 'PKSG-1921';
-  final occupiedSpot = 'C3';
-  final entranceTimestamp = DateTime.now().millisecondsSinceEpoch;
-  final exitTimestamp = DateTime.now().millisecondsSinceEpoch;
-  final occupiedSpotVehicle = <String, dynamic>{
-    'entrance_time': entranceTimestamp,
-    'license_plate': licensePlate,
-    'occupied_spot': occupiedSpot,
-  };
-  final historySpotVehicle = Map<String, dynamic>.from(occupiedSpotVehicle)
-    ..addAll(<String, dynamic>{'exit_time': exitTimestamp});
-
-  final dailyLogJson = <String, dynamic>{
-    'total_spots': totalSpots,
-    'available_spots': availableSpots,
-    'date': formattedDate,
-    'occupied_spots': [
-      <String, dynamic>{
-        'entrance_time': DateTime.now().millisecondsSinceEpoch,
-        'license_plate': licensePlate,
-        'occupied_spot': occupiedSpot,
-      }
-    ],
-  };
-  final dailyLog = ParkingDailyLogModel.fromJson(dailyLogJson);
+  late int entranceTimestamp;
+  late int exitTimestamp;
+  late String licensePlate;
+  late String occupiedSpot;
+  late ParkingDailyLogModel dailyLog;
 
   setUp(() {
+    entranceTimestamp = MockModelCollection.entranceTimestamp;
+    dailyLog = ParkingDailyLogModel.fromJson(MockModelCollection.dailyLogJson);
+    licensePlate = MockModelCollection.licensePlate;
+    occupiedSpot = MockModelCollection.occupiedSpot;
+    exitTimestamp = MockModelCollection.exitTimestamp;
     fetchDailyLog = FetchDailyLogSpy();
     updateDailyLog = UpdateDailyLogSpy();
     sut = GetxHomePresenter(
         fetchDailyLog: fetchDailyLog,
         updateDailyLog: updateDailyLog,
-        formattedDate: formattedDate);
+        formattedDate: MockModelCollection.formattedDate);
 
     fetchDailyLog.mockRequest(dailyLog);
     updateDailyLog.mockRequest();
   });
 
   setUpAll(() {
-    registerFallbackValue(dailyLog);
+    registerFallbackValue(
+        ParkingDailyLogModel.fromJson(MockModelCollection.dailyLogJson));
   });
 
   group('Create new entrance', () {
     test('Should call method correctly', () async {
       expect(sut.isLoadingStream, emitsInOrder([true, false]));
 
-      final _dailyLog = Map<String, dynamic>.from(dailyLogJson)
-        ..['occupied_spots'].add(occupiedSpotVehicle);
+      final _dailyLog =
+          Map<String, dynamic>.from(MockModelCollection.dailyLogJson)
+            ..['occupied_spots'].add(MockModelCollection.occupiedSpotVehicle);
 
       await sut.createEntrance(
         entranceTimestamp: entranceTimestamp,
@@ -109,9 +93,12 @@ void main() {
     test('Should call method correctly', () async {
       expect(sut.isLoadingStream, emitsInOrder([true, false]));
 
-      final _dailyLog = Map<String, dynamic>.from(dailyLogJson)
+      final _dailyLog = Map<String, dynamic>.from(dailyLog.toJson())
         ..addAll({
-          'daily_history': [historySpotVehicle]
+          'daily_history': [
+            Map<String, dynamic>.from(MockModelCollection.occupiedSpotVehicle)
+              ..addAll(<String, dynamic>{'exit_time': exitTimestamp})
+          ]
         })
         ..['occupied_spots'] = [];
 
@@ -146,7 +133,8 @@ void main() {
 
       await sut.fetchDailyParkingLot();
 
-      verify(() => fetchDailyLog.fetch(formattedDate: formattedDate)).called(1);
+      verify(() => fetchDailyLog.fetch(
+          formattedDate: MockModelCollection.formattedDate)).called(1);
     });
     test('Should create new ParkingDailyLog if fetch returns null', () async {
       expect(sut.isLoadingStream, emitsInOrder([true, false]));
@@ -155,7 +143,8 @@ void main() {
 
       await sut.fetchDailyParkingLot();
 
-      verify(() => fetchDailyLog.fetch(formattedDate: formattedDate)).called(1);
+      verify(() => fetchDailyLog.fetch(
+          formattedDate: MockModelCollection.formattedDate)).called(1);
       verify(() => updateDailyLog.update(dailyLog: any(named: 'dailyLog')))
           .called(1);
     });
@@ -164,7 +153,8 @@ void main() {
 
       final response = await sut.fetchDailyParkingLot();
 
-      expect(response, ParkingDailyLogModel.fromJson(dailyLogJson));
+      expect(response,
+          ParkingDailyLogModel.fromJson(MockModelCollection.dailyLogJson));
     });
     test(
         'Should emit UiError.unexpected if method throws DomainError.unexpected',

@@ -3,8 +3,8 @@ import 'package:parking_lot_app/ui/helpers/message/ui_error.dart';
 
 abstract class HistoryPresenter {
   Stream<bool> get isLoadingStream;
-  Stream<UiMessage> get errorStream;
+  Stream<UiMessage> get messageStream;
+  Stream<IParkingDailyLog> get parkingDailyLogStream;
 
-  Future<IParkingDailyLog> fetchDailyParkingLot(
-      {required String formattedDate});
+  Future<void> fetchDailyParkingLot({required String formattedDate});
 }

@@ -122,8 +122,13 @@ class _HomePageState extends State<HomePage> with LoadingManager {
                                 color: Colors.white,
                                 title: 'Saída',
                                 onTap: () async {
-                                  await _showCreateExitModal(
-                                      occupiedSpots: _occupiedSpots);
+                                  showDatePicker(
+                                      context: context,
+                                      initialDate: DateTime.now(),
+                                      firstDate: DateTime(2021),
+                                      lastDate: DateTime(2023));
+                                  // await _showCreateExitModal(
+                                  //     occupiedSpots: _occupiedSpots);
                                 }),
                             _bottomNavBarButton(
                                 color: Theme.of(context).primaryColor,

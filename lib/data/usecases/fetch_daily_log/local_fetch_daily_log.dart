@@ -15,8 +15,6 @@ class LocalFetchDailyLog implements FetchDailyLog {
       return response == null
           ? null
           : ParkingDailyLogModel.fromJson(Map<String, dynamic>.from(response));
-    } on DomainError {
-      rethrow;
     } catch (e) {
       throw DomainError.unexpected;
     }
