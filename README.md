@@ -6,4 +6,3 @@ Esse é um app de exemplo para o gerenciamento de um estacionamento onde você p
 ## EN
 An example app to manage a parking lot where you can register the entrances and exits, note the license plate and recover your daily history. All the data is saved on your phone's storage.
 
-![Diagram](https://myoctocat.com/assets/parking-diagram.png)
