@@ -16,10 +16,8 @@ class CustomTextFormField extends StatelessWidget {
     return SizedBox(
       height: 40,
       child: TextFormField(
-          textCapitalization: TextCapitalization.characters,
           onChanged: onChanged,
           autocorrect: false,
-          inputFormatters: [MaskedInputFormatter('####-####')],
           decoration: InputDecoration(
             labelText: title,
             border: OutlineInputBorder(

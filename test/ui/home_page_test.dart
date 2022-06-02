@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:parking_lot_app/ui/pages/home/home_page.dart';
-import 'package:parking_lot_app/ui/pages/home/views/parking_spots_view.dart';
 
 import '../mock/presentation/home_presenter_spy.dart';
 
@@ -31,6 +30,6 @@ void main() {
 
     await tester.pumpAndSettle();
 
-    expect(find.byType(ParkingSpotsView), findsWidgets);
+    expect(find.byType(GridView), findsWidgets);
   });
 }
