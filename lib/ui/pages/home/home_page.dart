@@ -95,9 +95,12 @@ class _HomePageState extends State<HomePage> with LoadingManager {
                             _bottomNavBarButton(
                                 color: Theme.of(context).primaryColor,
                                 title: 'Entrada',
-                                onTap: () async =>
-                                    await _showCreateEntranceModal(
-                                        spots: _availableSpots))
+                                onTap: () async {
+                                  final _success =
+                                      await _showCreateEntranceModal(
+                                          spots: _availableSpots);
+                                  if (_success) setState(() {});
+                                })
                           ],
                         ),
                       )

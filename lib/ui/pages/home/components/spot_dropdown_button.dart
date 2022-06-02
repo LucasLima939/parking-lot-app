@@ -40,8 +40,7 @@ class SpotDropdownButton extends StatelessWidget {
             icon: Container(),
             underline: Container(),
             style: TextStyle(color: Theme.of(context).primaryColor),
-            hint: Padding(
-                padding: EdgeInsets.only(left: 10), child: Text('Vaga')),
+            hint: Text('Vaga'),
             onChanged: (value) => onChanged(value),
             items: spots.map<DropdownMenuItem<String>>((String value) {
               return DropdownMenuItem<String>(

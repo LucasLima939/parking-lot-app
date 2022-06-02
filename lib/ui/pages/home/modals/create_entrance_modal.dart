@@ -80,10 +80,12 @@ class _CreateEntranceModalState extends State<CreateEntranceModal> {
         ConfirmButton(
             isEnabled: _enableButton,
             onTap: () async => await widget.presenter.createEntrance(
-                  license: _licensePlate,
-                  spot: _selectedSpot!,
-                  entranceTimestamp: DateTime.now().millisecondsSinceEpoch,
-                )),
+                license: _licensePlate,
+                spot: _selectedSpot!,
+                entranceTimestamp: DateTime.now().millisecondsSinceEpoch,
+                onSuccess: () {
+                  Navigator.pop(context, true);
+                })),
         Expanded(child: Container()),
       ]),
     );
