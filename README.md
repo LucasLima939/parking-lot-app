@@ -6,8 +6,4 @@ Esse é um app de exemplo para o gerenciamento de um estacionamento onde você p
 ## EN
 An example app to manage a parking lot where you can register the entrances and exits, note the license plate and recover your daily history. All the data is saved on your phone's storage.
 
-<h3 align="center"
-  <a href="">
-  <img src="https://github.com/LucasLima939/parking-lot-app/tree/master/assets/parking-diagram.png" alt=" width="400">
-  </a>
-</h3>
+![Diagrama de Relacioamento entre classes](./assets/parking-diagram.png.png)
