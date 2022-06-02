@@ -1,16 +1,7 @@
-# parking_lot_app
+# The Parking Lot App
 
-A new Flutter project.
+## PT
+Esse é um app de exemplo para o gerenciamento de um estacionamento onde você pode registrar as entradas e saídas, anotar as placas e recuperar o seu histórico diário. Todos os dados são salvos no armazenamento interno do celular.
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## EN
+An example app to manage a parking lot where you can register the entrances and exits, note the license plate and recover your daily history. All the data is saved on your phone's storage.
