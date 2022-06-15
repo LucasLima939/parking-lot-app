@@ -32,6 +32,7 @@ dependencies:
   path_provider: ^2.0.10
   hive: ^2.2.1
   get: ^4.6.5
+  http:
   intl: ^0.17.0
   flutter_multi_formatter: ^2.5.7
 
